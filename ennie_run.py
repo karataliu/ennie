@@ -35,15 +35,16 @@ def get_parser():
 
 
 def dispatch(args):
-    module = None
-    try:
-        module = args.module
-    except AttributeError:
+    module = args.module
+
+    if not module:
         print("Must provide a module name.")
         exit(1)
     logger.debug("Dispatching module:%s", module)
     if module == 'shell':
-        ennie.shell(args.host, args.command, args.dry_run)
+        (result, err) = ennie.shell(args.host, args.command, args.dry_run, args.verbose)
+        if not err:
+            print(result)
 
 
 def main():

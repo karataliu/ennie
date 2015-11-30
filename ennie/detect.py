@@ -28,6 +28,7 @@ def save():
 
 
 def list_data():
+    load()
     logger.debug("Run list:")
     print(data)
 
@@ -35,5 +36,3 @@ def list_data():
 def clear1():
     pass
 
-
-load()

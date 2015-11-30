@@ -5,13 +5,22 @@ __all__ = ["shell"]
 logger = logging.getLogger("ennie.shell")
 
 
-def shell(host, command, dryrun):
+def shell(host, command, dryrun, debug):
     logger.debug("Host is %s, Command is %s, Dryrun=%s", host, command, dryrun)
     cmd = command
 
     if host:
         logger.debug("Run @%s", host)
-        cmd = "ssh -v %s %s" % (host, command)
+        option = ''
+        if debug:
+            option = '-v'
+
+        cmd = "ssh -q %s " \
+              "-o StrictHostKeyChecking=no " \
+              "-o UserKnownHostsFile=/dev/null " \
+              "-o PasswordAuthentication=no " \
+              "%s %s" \
+              % (option, host, command)
     else:
         logger.debug("Run locally.")
 
@@ -25,6 +34,8 @@ def shell(host, command, dryrun):
         logger.info(err)
     else:
         logger.info("Result:%s", result)
+
+    return result, err
 
 
 def run_cmd(command):
