@@ -1,18 +1,18 @@
 import logging
 import json
-from os.path import expanduser,join
+from os.path import expanduser, join
 
 __all__ = ['detect']
 
 logger = logging.getLogger("ennie.detect")
-cache = join(expanduser("~"),'ennie.cache')
+cache = join(expanduser("~"), 'ennie.cache')
 data = None
 
 
 def detect(args):
     logger.debug("Module: detection, Action:%s", args.action)
-    if args.action=='list':
-        list()
+    if args.action == 'list':
+        list_data()
 
 
 def load():
@@ -27,7 +27,7 @@ def save():
         f.write(data)
 
 
-def list():
+def list_data():
     logger.debug("Run list:")
     print(data)
 

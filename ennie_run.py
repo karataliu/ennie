@@ -7,33 +7,35 @@ import ennie
 
 logger = logging.getLogger('ennie')
 
-def initLogger():
-    #formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s - %(message)s', '%Y-%m-%d %H:%M:%S', '%')
+
+def init_logger():
+    # formatter = logging.Formatter('%(asctime)s %(name)s %(levelname)s - %(message)s', '%Y-%m-%d %H:%M:%S', '%')
     formatter = logging.Formatter('[%(name)s,%(levelname)s] %(message)s', '%H:%M:%S')
     con = logging.StreamHandler()
     con.setFormatter(formatter)
     logging.getLogger('ennie').addHandler(con)
 
 
-def getParser():
+def get_parser():
     parser = argparse.ArgumentParser(description='Helper on multiple platforms')
-    parser.add_argument('--host','-t', help="specify the host to run on, will target localhost if not specified.")
+    parser.add_argument('--host', '-t', help="specify the host to run on, will target localhost if not specified.")
     parser.add_argument('--verbose', '-v', action='store_true', help="Show debug information.")
     parser.add_argument('--dry-run', '-n', action='store_true', help="Show command only.")
 
-    moduleParsers = parser.add_subparsers(metavar='MODULE', dest="module")
-    moduleDetection = moduleParsers.add_parser('detection', help='do detection') #, aliases=['de']
-    moduleDetection.add_argument('action', choices=['list', 'clear'])
+    module_parsers = parser.add_subparsers(metavar='MODULE', dest="module")
+    module_detection = module_parsers.add_parser('detection', help='do detection')  # , aliases=['de']
+    module_detection.add_argument('action', choices=['list', 'clear'])
 
-    #sp = moduleParsers.add_parser('package', help='do packing')
+    # sp = module_parsers.add_parser('package', help='do packing')
 
-    moduleShell = moduleParsers.add_parser('shell', help='execute command.')
-    moduleShell.add_argument('command')
+    module_shell = module_parsers.add_parser('shell', help='execute command.')
+    module_shell.add_argument('command')
 
     return parser
 
+
 def dispatch(args):
-    moudle = None
+    module = None
     try:
         module = args.module
     except AttributeError:
@@ -45,7 +47,7 @@ def dispatch(args):
 
 
 def main():
-    parser = getParser()
+    parser = get_parser()
     args = parser.parse_args()
     if args.verbose:
         logger.setLevel(logging.DEBUG)
@@ -54,5 +56,5 @@ def main():
 
 
 if __name__ == '__main__':
-    initLogger()
+    init_logger()
     main()

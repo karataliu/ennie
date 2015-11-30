@@ -2,15 +2,14 @@ import logging
 import subprocess
 
 __all__ = ["shell"]
-
-
 logger = logging.getLogger("ennie.shell")
 
+
 def shell(host, command, dryrun):
-    logger.debug("Host is %s, Command is %s, Dryrun=%s",host, command, dryrun)
+    logger.debug("Host is %s, Command is %s, Dryrun=%s", host, command, dryrun)
     cmd = command
 
-    if host :
+    if host:
         logger.debug("Run @%s", host)
         cmd = "ssh -v %s %s" % (host, command)
     else:
@@ -20,7 +19,7 @@ def shell(host, command, dryrun):
         print("Command is:%s" % cmd)
         return
 
-    (result, err) = runCmd(cmd)
+    (result, err) = run_cmd(cmd)
 
     if err:
         logger.info(err)
@@ -28,14 +27,13 @@ def shell(host, command, dryrun):
         logger.info("Result:%s", result)
 
 
-def runCmd(command):
+def run_cmd(command):
     logger.debug("Executing:%s", command)
     result = None
     err = None
     try:
-        result = subprocess.check_output(command, shell=True, universal_newlines=True)#, stderr=subprocess.DEVNULL)
+        result = subprocess.check_output(command, shell=True, universal_newlines=True)  # , stderr=subprocess.DEVNULL)
     except subprocess.CalledProcessError as e:
-        #logger.exception(e)
         err = e
 
     return result, err
