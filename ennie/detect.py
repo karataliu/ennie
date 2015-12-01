@@ -8,10 +8,10 @@ __all__ = ['Detector']
 logger = logging.getLogger("ennie.detect")
 dataFile = join(expanduser("~"), '.ennie.detect.cache')
 package_detection = {
-    'which pacman': 'pacman',
-    'which apt-get': 'apt-get',
-    'which yum': 'yum',
-    'which zypper': 'zypper'
+    'pacman': 'which pacman',
+    'apt-get': 'which apt-get',
+    'yum': 'which yum',
+    'zypper': 'which zypper'
 }
 
 
@@ -81,12 +81,12 @@ class Detector:
         logger.debug("Begin detection")
         shell = ennie.Shell(self.host, self.dryrun, self.verbose)
 
-        for cmd in package_detection:
-            logger.debug("Testing:%s", cmd)
-            (code, out) = shell.run(cmd)
+        for target in package_detection:
+            logger.debug("Testing:%s", target)
+            (code, out) = shell.run(package_detection[target] + " 2> /dev/null")
             if code == 0:
-                result["package.vendor"] = package_detection[cmd]
+                result["package.vendor"] = target
                 break
-        logger.debug("Detection result:%s", result)
+        logger.info("Detection result:%s", result)
         if not self.dryrun and result:
             self.data[self.dhost] = result
