@@ -42,7 +42,7 @@ def dispatch(args):
         exit(1)
     logger.debug("Dispatching module:%s", module)
     if module == 'shell':
-        (err, result) = ennie.shell(args.host, args.command, args.dry_run, args.verbose)
+        (err, result) = ennie.Shell(args.host, args.dry_run, args.verbose).run(args.command)
         if not err:
             print(result)
     elif module == 'detection':

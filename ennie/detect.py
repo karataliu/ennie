@@ -83,11 +83,10 @@ class Detector:
 
         for cmd in package_detection:
             logger.debug("Testing:%s",cmd)
-            (code, out) = ennie.shell(self.host, cmd, self.dry_run, self.debug)
+            (code, out) = ennie.Shell(self.host, self.dry_run, self.debug).run(cmd)
             if code == 0:
                 result["package.vendor"] = package_detection[cmd]
                 break
-
 
         if not self.dry_run:
             self.data[self.dhost] = result
