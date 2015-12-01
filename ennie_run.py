@@ -24,7 +24,7 @@ def get_parser():
 
     module_parsers = parser.add_subparsers(metavar='MODULE', dest="module")
     module_detection = module_parsers.add_parser('detection', help='do detection')  # , aliases=['de']
-    module_detection.add_argument('action', choices=['list', 'clear'])
+    module_detection.add_argument('action', choices=['list', 'clear', 'get', 'update'])
 
     # sp = module_parsers.add_parser('package', help='do packing')
 
@@ -42,9 +42,11 @@ def dispatch(args):
         exit(1)
     logger.debug("Dispatching module:%s", module)
     if module == 'shell':
-        (result, err) = ennie.shell(args.host, args.command, args.dry_run, args.verbose)
+        (err, result) = ennie.shell(args.host, args.command, args.dry_run, args.verbose)
         if not err:
             print(result)
+    elif module == 'detection':
+        ennie.Detector(args).detect()
 
 
 def main():

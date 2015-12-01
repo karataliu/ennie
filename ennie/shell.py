@@ -28,25 +28,22 @@ def shell(host, command, dryrun, debug):
         print("Command is:%s" % cmd)
         return
 
-    (result, err) = run_cmd(cmd)
+    (code, result) = run_cmd(cmd)
 
-    if err:
-        logger.info(err)
-    else:
-        logger.info("Result:%s", result)
+    logger.info("Result:%s,%s", code, result)
 
-    return result, err
+    return code, result
 
 
 def run_cmd(command):
     logger.debug("Executing:%s", command)
     result = None
-    err = None
+    code = 0
     try:
         result = subprocess.check_output(command, shell=True, universal_newlines=True)  # , stderr=subprocess.DEVNULL)
     except subprocess.CalledProcessError as e:
-        err = e
+        code = e.returncode
 
-    return result, err
+    return code, result
 
 
