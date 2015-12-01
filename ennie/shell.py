@@ -9,16 +9,16 @@ class Shell:
     def __init__(self, host, dryrun, debug):
         self.host = host
         self.dryrun = dryrun
-        self.debug = debug
+        self.verbose = debug
 
     def run(self, command):
         logger.debug("Host is %s,, Dryrun=%s Command is %s", self.host, self.dryrun, command)
         cmd = command
 
         if self.host:
-            logger.debug("Run @%s", self.host)
+            logger.debug("Run remotely %s", self.host)
             option = ''
-            if self.debug == 0:
+            if self.verbose > 1:
                 option = '-v'
 
             cmd = "ssh -q %s " \

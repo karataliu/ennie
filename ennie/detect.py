@@ -16,27 +16,26 @@ package_detection = {
 
 
 class Detector:
-    def __init__(self, args):
-        self.host = args.host
+    def __init__(self, host, dryrun, verbose):
+        self.host = host
         self.dhost = self.host
         if not self.dhost:
             self.dhost = "localhost"
-        self.action = args.action
-        self.dry_run = args.dry_run
-        self.debug = args.verbose
+        self.dryrun = dryrun
+        self.verbose = verbose
 
         self.data = self.load_data()
 
-    def detect(self):
-        logger.debug("Module: detection, Host:%s, Action:%s", self.host, self.action)
+    def detect(self, action):
+        logger.debug("Module: detection, Host:%s, Action:%s", self.host, action)
 
-        if self.action == 'list':
+        if action == 'list':
             self.list_data()
-        elif self.action == 'clear':
+        elif action == 'clear':
             self.clear_data()
-        elif self.action == 'get':
+        elif action == 'get':
             self.get_data()
-        elif self.action == 'update':
+        elif action == 'update':
             self.update_data()
 
     @staticmethod
@@ -57,7 +56,6 @@ class Detector:
             json.dump(self.data, f)
 
     def list_data(self):
-        logger.debug("Run list:")
         print(self.data)
 
     def clear_data(self):
@@ -80,13 +78,15 @@ class Detector:
 
     def do_detection(self):
         result = {}
+        logger.debug("Begin detection")
+        shell = ennie.Shell(self.host, self.dryrun, self.verbose)
 
         for cmd in package_detection:
-            logger.debug("Testing:%s",cmd)
-            (code, out) = ennie.Shell(self.host, self.dry_run, self.debug).run(cmd)
+            logger.debug("Testing:%s", cmd)
+            (code, out) = shell.run(cmd)
             if code == 0:
                 result["package.vendor"] = package_detection[cmd]
                 break
-
-        if not self.dry_run:
+        logger.debug("Detection result:%s", result)
+        if not self.dryrun and result:
             self.data[self.dhost] = result
